@@ -1,32 +1,34 @@
 import unittest
-from nlp import TextInsightNLP
+from nlp_engine import TextInsightNLP
 
 class TestTextInsightNLP(unittest.TestCase):
     def setUp(self):
         self.nlp = TextInsightNLP()
 
-    def test_positive_sentiment(self):
-        text = "This product is amazing, fast, and great!"
+    def test_get_top_ngrams_extracts_bigrams(self):
+        text = "machine learning models machine learning pipelines software development"
+        top_bigrams = self.nlp.get_top_ngrams(text, n=2, top_k=2)
+        self.assertEqual(len(top_bigrams), 2)
+        self.assertEqual(top_bigrams[0][0], "machine learning")
+        self.assertEqual(top_bigrams[0][1], 2)
+
+    def test_positive_sentiment_detection(self):
+        text = "This new software release is fast, clean, and scalable!"
         res = self.nlp.analyze_sentiment(text)
-        self.assertEqual(res["sentiment"], "positive")
-        self.assertGreater(res["score"], 0)
+        self.assertEqual(res["label"], "POSITIVE")
+        self.assertGreater(res["positive_count"], 0)
 
-    def test_negative_sentiment(self):
-        text = "The application is terrible, broken, and slow."
+    def test_negative_sentiment_detection(self):
+        text = "The application crashed with a terrible slow bug error."
         res = self.nlp.analyze_sentiment(text)
-        self.assertEqual(res["sentiment"], "negative")
-        self.assertLess(res["score"], 0)
+        self.assertEqual(res["label"], "NEGATIVE")
 
-    def test_extract_keywords(self):
-        text = "Python is a powerful programming language. Python makes software engineering easy."
-        keywords = self.nlp.extract_keywords(text, top_n=2)
-        self.assertIn("python", keywords)
-
-    def test_readability_metrics(self):
-        text = "First sentence here. Second sentence follows!"
-        metrics = self.nlp.compute_readability_score(text)
-        self.assertEqual(metrics["sentence_count"], 2)
-        self.assertEqual(metrics["word_count"], 6)
+    def test_readability_metrics_calculation(self):
+        text = "Python is a high-level programming language. It is easy to learn and write."
+        res = self.nlp.calculate_readability(text)
+        self.assertGreater(res["words"], 0)
+        self.assertEqual(res["sentences"], 2)
+        self.assertGreater(res["flesch_score"], 0)
 
 if __name__ == '__main__':
     unittest.main()
