@@ -3,10 +3,11 @@ Text Insight NLP Analytics Engine (Python)
 """
 
 import re
+from collections import Counter
 
 class TextInsightNLP:
     def __init__(self):
-        pass
+        self.stop_words = {"the", "a", "an", "and", "is", "in", "it", "of", "to", "for", "with", "on", "at", "by"}
 
     def analyze_sentiment(self, text: str) -> dict:
         if not text or not text.strip():
@@ -33,6 +34,16 @@ class TextInsightNLP:
             "label": label
         }
 
+    def get_top_ngrams(self, text: str, n: int = 2, top_k: int = 5) -> list:
+        if not text:
+            return []
+        words = [w.lower() for w in re.findall(r'\b\w+\b', text) if w.lower() not in self.stop_words]
+        if len(words) < n:
+            return []
+        ngrams = [" ".join(words[i:i+n]) for i in range(len(words) - n + 1)]
+        counts = Counter(ngrams)
+        return counts.most_common(top_k)
+
     def estimate_reading_time(self, text: str, wpm: int = 200) -> dict:
         if not text:
             return {"word_count": 0, "minutes": 0.0, "formatted": "0 min read"}
@@ -56,7 +67,6 @@ class TextInsightNLP:
         word_count = len(words)
         sentence_count = max(len(sentences), 1)
 
-        # Simplified Flesch Reading Ease Score
         avg_sentence_length = word_count / sentence_count
         score = max(0.0, min(100.0, round(206.835 - (1.015 * avg_sentence_length), 2)))
 

@@ -5,6 +5,13 @@ class TestTextInsightNLP(unittest.TestCase):
     def setUp(self):
         self.nlp = TextInsightNLP()
 
+    def test_get_top_ngrams_extracts_bigrams(self):
+        text = "machine learning models machine learning pipelines software development"
+        top_bigrams = self.nlp.get_top_ngrams(text, n=2, top_k=2)
+        self.assertEqual(len(top_bigrams), 2)
+        self.assertEqual(top_bigrams[0][0], "machine learning")
+        self.assertEqual(top_bigrams[0][1], 2)
+
     def test_estimate_reading_time_calculates_minutes(self):
         text = " ".join(["word"] * 400)
         res = self.nlp.estimate_reading_time(text, wpm=200)
