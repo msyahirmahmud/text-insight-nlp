@@ -12,6 +12,13 @@ class TestTextInsightNLP(unittest.TestCase):
         self.assertEqual(top_bigrams[0][0], "machine learning")
         self.assertEqual(top_bigrams[0][1], 2)
 
+    def test_estimate_reading_time_calculates_minutes(self):
+        text = " ".join(["word"] * 400)
+        res = self.nlp.estimate_reading_time(text, wpm=200)
+        self.assertEqual(res["word_count"], 400)
+        self.assertEqual(res["minutes"], 2.0)
+        self.assertEqual(res["formatted"], "2 min read")
+
     def test_positive_sentiment_detection(self):
         text = "This new software release is fast, clean, and scalable!"
         res = self.nlp.analyze_sentiment(text)
