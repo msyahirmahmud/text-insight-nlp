@@ -44,6 +44,19 @@ class TextInsightNLP:
         counts = Counter(ngrams)
         return counts.most_common(top_k)
 
+    def estimate_reading_time(self, text: str, wpm: int = 200) -> dict:
+        if not text:
+            return {"word_count": 0, "minutes": 0.0, "formatted": "0 min read"}
+        words = re.findall(r'\b\w+\b', text)
+        word_count = len(words)
+        minutes = round(word_count / wpm, 2)
+        display_minutes = max(1, round(minutes))
+        return {
+            "word_count": word_count,
+            "minutes": minutes,
+            "formatted": f"{display_minutes} min read"
+        }
+
     def calculate_readability(self, text: str) -> dict:
         if not text or not text.strip():
             return {"words": 0, "sentences": 0, "score": 100.0}
@@ -54,7 +67,6 @@ class TextInsightNLP:
         word_count = len(words)
         sentence_count = max(len(sentences), 1)
 
-        # Simplified Flesch Reading Ease Score
         avg_sentence_length = word_count / sentence_count
         score = max(0.0, min(100.0, round(206.835 - (1.015 * avg_sentence_length), 2)))
 
