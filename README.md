@@ -3,7 +3,6 @@
 [![Build Status](https://github.com/msyahirmahmud/text-insight-nlp/actions/workflows/ci.yml/badge.svg)](https://github.com/msyahirmahmud/text-insight-nlp/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python](https://img.shields.io/badge/Python-3.9+-blue.svg)](https://www.python.org/)
-[![Tests Passing](https://img.shields.io/badge/Tests-100%25-brightgreen.svg)]()
 
 > Natural Language Processing (NLP) tool for sentiment scoring, keyword extraction, and text readability metrics.
 
